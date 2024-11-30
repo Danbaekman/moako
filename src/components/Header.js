@@ -1,5 +1,4 @@
 import React from "react";
-import moakoLogo from "../assets/images/moakoLogo.png";
 
 const Header = () => {
   return (
@@ -11,7 +10,7 @@ const Header = () => {
         {/* 로고와 제목 (정 중앙 배치, 로고는 제목 좌측) */}
         <div className="flex items-center space-x-4">
           <img
-            src={moakoLogo} // 로고 이미지 경로
+            src="/assets/images/moakoLogo.png"
             alt="Moako Logo"
             className="h-12 w-12"
           />

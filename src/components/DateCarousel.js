@@ -5,7 +5,7 @@ const getDateRange = (centerDate) => {
   const dates = [];
   for (let i = -3; i <= 3; i++) {
     const date = new Date(centerDate);
-    date.setDate(centerDate.getDate() + i); // 기준 날짜에서 i일 더하거나 빼기
+    date.setDate(centerDate.getDate() + i);
     dates.push({
       fullDate: date.toISOString().slice(0, 10), // YYYY-MM-DD 형식
       day: date.getDate(), // 일자
@@ -13,6 +13,17 @@ const getDateRange = (centerDate) => {
     });
   }
   return dates;
+};
+
+// 요일 아이콘 매핑
+const dayIcons = {
+  월: "/assets/images/monday.png",
+  화: "/assets/images/tuesday.png",
+  수: "/assets/images/wednesday.png",
+  목: "/assets/images/thursday.png",
+  금: "/assets/images/friday.png",
+  토: "/assets/images/saturday.png",
+  일: "/assets/images/sunday.png",
 };
 
 const DateCarousel = ({ onDateSelect, transactions }) => {
@@ -42,10 +53,9 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
   };
 
   const handleDateClick = (selectedDate) => {
-    const newCenterDate = new Date(selectedDate);
-    setCenterDate(newCenterDate);
+    setCenterDate(new Date(selectedDate)); // 상태 업데이트
     if (onDateSelect) {
-      onDateSelect(selectedDate); // 선택된 날짜 전달
+      onDateSelect(selectedDate); // 부모 컴포넌트로 선택된 날짜 전달
     }
   };
 
@@ -61,23 +71,32 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
       <div className="flex items-center space-x-4 overflow-x-auto">
         {dateRange.map((item, index) => {
           const { income, expense } = calculateIncomeExpense(item.fullDate);
+          const dayOfWeekIcon = dayIcons[item.dayOfWeek] || null; // 요일 아이콘 매핑
           return (
             <div
               key={index}
               className={`flex flex-col items-center p-4 w-[120px] rounded-md shadow-md text-center cursor-pointer transition-all ${
                 item.fullDate === centerDate.toISOString().slice(0, 10)
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100"
+                  ? "bg-lime-200"
+                  : "bg-white"
               }`}
               onClick={() => handleDateClick(item.fullDate)}
             >
               {/* 날짜와 요일 */}
               <h3 className="text-lg font-bold">{item.day}일</h3>
-              <p className="text-sm text-gray-600">{item.dayOfWeek}</p>
+              {dayOfWeekIcon ? (
+                <img
+                  src={dayOfWeekIcon}
+                  alt={item.dayOfWeek}
+                  className="w-24 h-24 mt-1"
+                />
+              ) : (
+                <p className="text-sm text-gray-600">{item.dayOfWeek}</p>
+              )}
 
               {/* 수입과 지출 */}
               <div className="mt-2">
-                <p className="text-sm text-green-600">
+                <p className="text-sm text-blue-600">
                   입금: {income.toLocaleString()} G
                 </p>
                 <p className="text-sm text-red-600">

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import goldIcon from "../assets/images/goldIcon.png";
 
 const TransactionTable = ({ transactions, selectedDate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
@@ -182,7 +181,7 @@ const TransactionTable = ({ transactions, selectedDate }) => {
               >
                 {tx.type}: {tx.amount.toLocaleString()} G{" "}
                 <img
-                  src={goldIcon}
+                  src="/assets/images/goldIcon.png" // public 폴더 내 경로 사용
                   alt="골드"
                   className="inline h-5 w-5 ml-1"
                 />

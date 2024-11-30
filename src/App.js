@@ -4,6 +4,7 @@ import DateCarousel from "./components/DateCarousel";
 import AddTransaction from "./components/AddTransaction";
 import AddExpense from "./components/AddExpense";
 import TransactionTable from "./components/TransactionTable";
+import InitialGoldSetting from "./components/InitialGoldSetting";
 
 const App = () => {
   const [transactions, setTransactions] = useState([]); // 트랜잭션 데이터
@@ -25,6 +26,12 @@ const App = () => {
     setCurrentBalance(initialBalance + totalIncome - totalExpense);
   }, [transactions, initialBalance]);
 
+  // 초기 보유 골드 설정 핸들러
+  const handleInitialBalanceChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setInitialBalance(isNaN(value) ? 0 : value);
+  };
+
   // 입금 데이터 추가
   const addTransaction = (newTransaction) => {
     const updatedBalance = currentBalance + newTransaction.amount; // 잔액 계산
@@ -45,65 +52,67 @@ const App = () => {
     setCurrentBalance(updatedBalance);
   };
 
-  const handleInitialBalanceChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    setInitialBalance(isNaN(value) ? 0 : value);
-  };
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
 
-      <main className="p-4">
-        {/* 초기 보유 골드 설정 */}
-        <div className="max-w-4xl mx-auto bg-white p-4 rounded-md shadow-md mb-4">
-          <h2 className="text-lg font-bold mb-2">초기 보유 골드 설정</h2>
-          <div className="flex items-center">
-            <label className="mr-2 font-bold">보유 골드:</label>
-            <input
-              type="number"
-              value={initialBalance}
-              onChange={handleInitialBalanceChange}
-              onFocus={(e) => {
-                if (e.target.value === "0") e.target.value = "";
-              }}
-              onBlur={(e) => {
-                if (e.target.value === "") e.target.value = 0;
-              }}
-              className="border rounded p-2 w-1/2"
+      <main className="flex p-4">
+        {/* 좌측 여백 */}
+        <div className="w-1/6 pr-4">
+          <InitialGoldSetting
+            initialBalance={initialBalance}
+            currentBalance={currentBalance}
+            handleInitialBalanceChange={handleInitialBalanceChange}
+          />
+        </div>
+
+        {/* 중앙 메인 콘텐츠 */}
+        <div className="w-4/6">
+          {/* 날짜 선택 */}
+          <DateCarousel
+            onDateSelect={setSelectedDate}
+            transactions={transactions}
+          />
+
+          {/* 입출금 내역 추가 */}
+          <div className="flex justify-between mt-4">
+            <div className="w-[48%] bg-white p-4 rounded-md shadow-md">
+              <h2 className="text-xl font-bold text-center mb-4">입금 내역 추가</h2>
+              <AddTransaction
+                addTransaction={addTransaction}
+                selectedDate={selectedDate}
+              />
+            </div>
+            <div className="w-[48%] bg-white p-4 rounded-md shadow-md">
+              <h2 className="text-xl font-bold text-center mb-4">출금 내역 추가</h2>
+              <AddExpense
+                addExpense={addExpense}
+                currentBalance={currentBalance}
+                selectedDate={selectedDate}
+              />
+            </div>
+          </div>
+
+          {/* 골드 입출금 내역 */}
+          <div className="mt-4 bg-white p-4 rounded-md shadow-md">
+            <TransactionTable
+              transactions={transactions}
+              selectedDate={selectedDate}
             />
           </div>
-          <p className="text-sm text-gray-500 mt-2">
-            현재 설정된 잔액: {currentBalance.toLocaleString()} G
-          </p>
         </div>
 
-        {/* 날짜 선택 */}
-        <div className="max-w-4xl mx-auto">
-          <DateCarousel onDateSelect={setSelectedDate} transactions={transactions} />
-        </div>
-
-        {/* 입출금 내역 추가 */}
-        <div className="flex justify-between mt-4 max-w-4xl mx-auto">
-          <div className="w-[48%] bg-white p-4 rounded-md shadow-md">
-            <h2 className="text-xl font-bold text-center mb-4">입금 내역 추가</h2>
-            <AddTransaction 
-              addTransaction={addTransaction}
-              selectedDate={selectedDate} />
-          </div>
-          <div className="w-[48%] bg-white p-4 rounded-md shadow-md">
-            <h2 className="text-xl font-bold text-center mb-4">출금 내역 추가</h2>
-            <AddExpense addExpense={addExpense}
-            currentBalance={currentBalance} 
-            selectedDate={selectedDate} />
-          </div>
-        </div>
-
-        {/* 골드 입출금 내역 */}
-        <div className="mt-4 max-w-4xl mx-auto bg-white p-4 rounded-md shadow-md">
-          <TransactionTable transactions={transactions} selectedDate={selectedDate} />
-        </div>
+        {/* 우측 여백 */}
+        <div className="w-1/6 pl-4"></div>
       </main>
+
+      {/* 모코코 통계 버튼 (우측 하단 고정) */}
+      <button
+        className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition"
+        onClick={() => alert("모코코 통계 페이지로 이동!")} // 버튼 클릭 시 이벤트
+      >
+        모코코 통계 보기
+      </button>
     </div>
   );
 };
