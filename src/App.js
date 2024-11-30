@@ -5,6 +5,7 @@ import AddTransaction from "./components/AddTransaction";
 import AddExpense from "./components/AddExpense";
 import TransactionTable from "./components/TransactionTable";
 import InitialGoldSetting from "./components/InitialGoldSetting";
+import MokokoStatisticsButton from "./components/MokokoStatisticsButton";
 
 const App = () => {
   const [transactions, setTransactions] = useState([]); // 트랜잭션 데이터
@@ -52,6 +53,10 @@ const App = () => {
     setCurrentBalance(updatedBalance);
   };
 
+  const handleStatisticsClick = () => {
+    alert("모코코 통계 페이지로 이동!");
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
@@ -68,13 +73,11 @@ const App = () => {
 
         {/* 중앙 메인 콘텐츠 */}
         <div className="w-4/6">
-          {/* 날짜 선택 */}
           <DateCarousel
             onDateSelect={setSelectedDate}
             transactions={transactions}
           />
 
-          {/* 입출금 내역 추가 */}
           <div className="flex justify-between mt-4">
             <div className="w-[48%] bg-white p-4 rounded-md shadow-md">
               <h2 className="text-xl font-bold text-center mb-4">입금 내역 추가</h2>
@@ -93,7 +96,6 @@ const App = () => {
             </div>
           </div>
 
-          {/* 골드 입출금 내역 */}
           <div className="mt-4 bg-white p-4 rounded-md shadow-md">
             <TransactionTable
               transactions={transactions}
@@ -106,13 +108,8 @@ const App = () => {
         <div className="w-1/6 pl-4"></div>
       </main>
 
-      {/* 모코코 통계 버튼 (우측 하단 고정) */}
-      <button
-        className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition"
-        onClick={() => alert("모코코 통계 페이지로 이동!")} // 버튼 클릭 시 이벤트
-      >
-        모코코 통계 보기
-      </button>
+      {/* 모코코 통계 버튼 */}
+      <MokokoStatisticsButton onClick={handleStatisticsClick} />
     </div>
   );
 };
