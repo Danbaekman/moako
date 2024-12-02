@@ -12,7 +12,7 @@ const Header = () => {
             alt="Moako Logo"
             className="h-8 w-8"
           />
-          <h1 className="text-4xl font-baloo font-bold text-lime-500">Moako</h1>
+          <h1 className="text-4xl font-baloo font-bold text-green-500">Moako</h1>
         </div>
 
         {/* 부제목 */}

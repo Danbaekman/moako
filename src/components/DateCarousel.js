@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa"; // 아이콘 추가
 
 // 날짜 계산 함수 (중앙 날짜 기준)
 const getDateRange = (centerDate) => {
@@ -52,6 +53,13 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
     return { income, expense };
   };
 
+  // 월 변경 핸들러
+  const changeMonth = (direction) => {
+    const newCenterDate = new Date(centerDate);
+    newCenterDate.setMonth(centerDate.getMonth() + direction); // +1: 다음 달, -1: 이전 달
+    setCenterDate(newCenterDate);
+  };
+
   const handleDateClick = (selectedDate) => {
     setCenterDate(new Date(selectedDate)); // 상태 업데이트
     if (onDateSelect) {
@@ -60,11 +68,30 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4 max-w-4xl mx-auto">
+    <div className="flex flex-col items-center space-y-4 mx-auto">
       {/* 연도와 월 */}
-      <div className="text-center">
-        <h2 className="text-4xl font-bold">{currentMonth}</h2>
-        <p className="text-lg text-gray-600">{currentYear}</p>
+      <div className="relative bg-gray-100 w-full flex items-center justify-center px-4 rounded-md">
+        {/* 왼쪽 버튼 */}
+        <button
+          onClick={() => changeMonth(-1)}
+          className="absolute left-[calc(50%-100px)] text-green-500 text-3xl hover:text-gray-300 transition"
+        >
+          <FaAngleLeft /> {/* 아이콘 사용 */}
+        </button>
+
+        {/* 중앙 연도 및 월 */}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-green-500">{currentMonth}</h2>
+          <p className="text-lg text-green-700">{currentYear}</p>
+        </div>
+
+        {/* 오른쪽 버튼 */}
+        <button
+          onClick={() => changeMonth(1)}
+          className="absolute right-[calc(50%-100px)] text-green-500 text-3xl hover:text-gray-300 transition"
+        >
+          <FaAngleRight /> {/* 아이콘 사용 */}
+        </button>
       </div>
 
       {/* 날짜 카드 */}
@@ -96,10 +123,10 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
 
               {/* 수입과 지출 */}
               <div className="mt-2">
-                <p className="text-sm text-blue-600">
-                  입금: {income.toLocaleString()} G
+                <p className="text-xs text-blue-600">
+                  수입: {income.toLocaleString()} G
                 </p>
-                <p className="text-sm text-red-600">
+                <p className="text-xs text-red-600">
                   지출: {expense.toLocaleString()} G
                 </p>
               </div>

@@ -69,7 +69,7 @@ const TransactionTable = ({ transactions, selectedDate }) => {
       <div className="flex flex-col items-start mb-4">
         <button
           onClick={toggleModal}
-          className="text-blue-500 underline hover:text-blue-700 mb-2"
+          className="text-gray-700 underline hover:text-gray-300 mb-2"
         >
           {selectedPeriod} • {selectedType} • {selectedSortOrder} ▼
         </button>

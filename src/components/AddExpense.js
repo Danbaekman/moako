@@ -121,7 +121,7 @@ const AddExpense = ({ addExpense, selectedDate, currentBalance }) => {
         {/* 추가 버튼 */}
         <button
           onClick={handleAdd}
-          className="w-full bg-lime-300 p-2 rounded"
+          className="w-full bg-green-500 text-white p-2 rounded"
         >
           추가
         </button>

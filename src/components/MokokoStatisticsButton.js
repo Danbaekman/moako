@@ -1,6 +1,9 @@
 import React from "react";
+import "../index.css"; // TailwindCSS 스타일이 포함된 파일
+import { useNavigate } from "react-router-dom";
 
 const MokokoStatisticsButton = ({ onClick }) => {
+    const navigate = useNavigate();
   return (
     <div className="fixed bottom-4 right-4 flex flex-col items-center">
       {/* 말풍선 */}
@@ -15,11 +18,11 @@ const MokokoStatisticsButton = ({ onClick }) => {
 
       {/* 큰 원 */}
       <div
-        className="bg-pink-300 w-40 h-40 rounded-full shadow-lg relative flex items-center justify-center hover:bg-pink-400 transition"
-        onClick={onClick}
+        className="bg-pink-300 w-40 h-40 rounded-full shadow-lg relative flex items-center justify-center hover:bg-pink-200 transition animate-bounce-slow"
+        onClick={() => navigate("/statistics")}
       >
         {/* 작은 원 */}
-        <div className="bg-white w-32 h-32 rounded-full absolute top-0 flex items-center justify-center">
+        <div className="bg-pink-300 w-32 h-32 rounded-full absolute top-0 flex items-center justify-center">
           <img
             src="/assets/images/mokokoButton.png" // 모코코 이미지 경로
             alt="통계"

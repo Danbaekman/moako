@@ -6,8 +6,8 @@ const InitialGoldSetting = ({
   handleInitialBalanceChange,
 }) => {
   return (
-    <div className="bg-white p-4 rounded-md shadow-md w-[90%] max-w-[360px] mx-auto">
-      <h2 className="text-lg font-bold mb-2">초기 보유 골드 설정</h2>
+    <div className="bg-white p-2 rounded-md shadow-md w-[90%] max-w-[360px] mx-auto">
+      <h2 className="text-lg font-bold mb-2 text-center">초기 보유 골드 설정</h2>
       <div className="flex items-center">
         {/* 텍스트와 아이콘 */}
         <label className="mr-2 font-bold flex items-center">
@@ -15,7 +15,7 @@ const InitialGoldSetting = ({
           <img
             src="/assets/images/goldIcon.png" // 아이콘 경로
             alt="골드"
-            className="w-5 h-5 ml-1" // 아이콘 크기 및 텍스트와 간격 조정
+            className="w-5 h-5" // 아이콘 크기 및 텍스트와 간격 조정
           />
           :
         </label>
@@ -35,7 +35,7 @@ const InitialGoldSetting = ({
           />
         </div>
       </div>
-      <p className="text-sm text-gray-500 mt-2">
+      <p className="text-sm text-gray-500 mt-2 text-center">
         현재 설정된 잔액: {currentBalance.toLocaleString()} G
       </p>
     </div>

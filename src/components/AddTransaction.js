@@ -100,7 +100,7 @@ const AddTransaction = ({ addTransaction, selectedDate}) => {
         {/* 추가 버튼 */}
         <button
           onClick={handleAdd}
-          className="w-full bg-lime-300 p-2 rounded"
+          className="w-full text-white bg-green-500 p-2 rounded"
         >
           추가
         </button>
