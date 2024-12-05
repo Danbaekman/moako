@@ -7,7 +7,7 @@ const AddExpense = ({ addExpense, selectedDate, currentBalance }) => {
   const [amount, setAmount] = useState(0); // 카테고리 금액 입력
 
   // 카테고리 데이터
-  const categories = ["재련 재료 구매", "장비 재련", "보석 구매", "악세서리 구매", "초월", "엘릭서", "카르마", "아바타 구매", "탈 것 구매"];
+  const categories = ["재련 재료 구매", "장비 재련", "보석 구매", "악세서리 구매", "초월", "엘릭서", "카르마", "아바타 구매",];
 
   const handleAdd = () => {
     const expenseAmount = category

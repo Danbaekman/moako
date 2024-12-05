@@ -7,7 +7,7 @@ import AddExpense from "./components/AddExpense";
 import TransactionTable from "./components/TransactionTable";
 import InitialGoldSetting from "./components/InitialGoldSetting";
 import MokokoStatisticsButton from "./components/MokokoStatisticsButton";
-import Statistics from "./components/Statistics"; // 통계 페이지 컴포넌트 추가
+import Statistics from "./pages/Statistics";
 
 const App = () => {
   const [transactions, setTransactions] = useState([]); // 트랜잭션 데이터
