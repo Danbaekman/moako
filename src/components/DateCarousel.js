@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa"; // 아이콘 추가
+import MonthYear from "./MonthYear"; // MonthYear 컴포넌트 import
 
 // 날짜 계산 함수 (중앙 날짜 기준)
 const getDateRange = (centerDate) => {
@@ -36,30 +36,32 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
     setDateRange(getDateRange(centerDate));
   }, [centerDate]);
 
-  // 연도와 월 추출
-  const currentYear = centerDate.getFullYear();
-  const currentMonth = centerDate.toLocaleDateString("ko-KR", { month: "long" });
-
   // 특정 날짜의 수입과 지출 계산
   const calculateIncomeExpense = (date) => {
-    const income = transactions
-      .filter((tx) => tx.date === date && tx.type === "입금")
+    // 날짜별로 필터링한 데이터를 최신순으로 정렬
+    const filteredTransactions = transactions
+      .filter((tx) => tx.date === date)
+      .sort((a, b) => new Date(b.dateTime || b.date) - new Date(a.dateTime || a.date)); // 최신순 정렬
+
+    const income = filteredTransactions
+      .filter((tx) => tx.type === "입금")
       .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
-    const expense = transactions
-      .filter((tx) => tx.date === date && tx.type === "출금")
+    const expense = filteredTransactions
+      .filter((tx) => tx.type === "출금")
       .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
-    return { income, expense };
+    return { income, expense, transactions: filteredTransactions }; // 최신순 정렬된 데이터를 반환
   };
 
   // 월 변경 핸들러
-  const changeMonth = (direction) => {
+  const handleChangeMonth = (direction) => {
     const newCenterDate = new Date(centerDate);
     newCenterDate.setMonth(centerDate.getMonth() + direction); // +1: 다음 달, -1: 이전 달
     setCenterDate(newCenterDate);
   };
 
+  // 날짜 클릭 핸들러
   const handleDateClick = (selectedDate) => {
     setCenterDate(new Date(selectedDate)); // 상태 업데이트
     if (onDateSelect) {
@@ -69,35 +71,16 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
 
   return (
     <div className="flex flex-col items-center space-y-4 mx-auto">
-      {/* 연도와 월 */}
-      <div className="relative bg-gray-100 w-full flex items-center justify-center px-4 rounded-md">
-        {/* 왼쪽 버튼 */}
-        <button
-          onClick={() => changeMonth(-1)}
-          className="absolute left-[calc(50%-100px)] text-green-500 text-3xl hover:text-gray-300 transition"
-        >
-          <FaAngleLeft /> {/* 아이콘 사용 */}
-        </button>
-
-        {/* 중앙 연도 및 월 */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-green-500">{currentMonth}</h2>
-          <p className="text-lg text-green-700">{currentYear}</p>
-        </div>
-
-        {/* 오른쪽 버튼 */}
-        <button
-          onClick={() => changeMonth(1)}
-          className="absolute right-[calc(50%-100px)] text-green-500 text-3xl hover:text-gray-300 transition"
-        >
-          <FaAngleRight /> {/* 아이콘 사용 */}
-        </button>
-      </div>
+      {/* MonthYearNavigator 컴포넌트 사용 */}
+      <MonthYear
+        currentDate={centerDate}
+        onChangeMonth={handleChangeMonth}
+      />
 
       {/* 날짜 카드 */}
       <div className="flex items-center space-x-4 overflow-x-auto">
         {dateRange.map((item, index) => {
-          const { income, expense } = calculateIncomeExpense(item.fullDate);
+          const { income, expense, transactions: dailyTransactions } = calculateIncomeExpense(item.fullDate);
           const dayOfWeekIcon = dayIcons[item.dayOfWeek] || null; // 요일 아이콘 매핑
           return (
             <div
@@ -129,6 +112,19 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
                 <p className="text-xs text-red-600">
                   지출: {expense.toLocaleString()} G
                 </p>
+              </div>
+
+              {/* 트랜잭션 목록 표시 */}
+              <div className="mt-4 space-y-1 text-sm">
+                {dailyTransactions.map((tx, i) => (
+                  <div key={i}>
+                    {tx.type === "입금" ? (
+                      <p className="text-blue-600">{tx.description}: {tx.amount.toLocaleString()} G</p>
+                    ) : (
+                      <p className="text-red-600">{tx.description}: {tx.amount.toLocaleString()} G</p>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           );

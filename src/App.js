@@ -37,21 +37,56 @@ const App = () => {
 
   const addTransaction = (newTransaction) => {
     const updatedBalance = currentBalance + newTransaction.amount;
-    setTransactions((prev) => [
-      ...prev,
-      { ...newTransaction, type: "입금", balance: updatedBalance },
-    ]);
+    setTransactions((prev) =>
+      [...prev, { ...newTransaction, type: "입금", balance: updatedBalance }].sort(
+        (a, b) => new Date(b.dateTime || b.date) - new Date(a.dateTime || a.date)
+      )
+    );
     setCurrentBalance(updatedBalance);
   };
+  
 
   const addExpense = (newExpense) => {
     const updatedBalance = currentBalance - newExpense.amount;
-    setTransactions((prev) => [
-      ...prev,
-      { ...newExpense, type: "출금", balance: updatedBalance },
-    ]);
+    setTransactions((prev) =>
+      [...prev, { ...newExpense, type: "출금", balance: updatedBalance }].sort(
+        (a, b) => new Date(b.dateTime || b.date) - new Date(a.dateTime || a.date)
+      )
+    );
     setCurrentBalance(updatedBalance);
   };
+  
+  const weeklyChartData = (() => {
+    const weeks = {};
+  
+    transactions.forEach((tx) => {
+      const txDate = new Date(tx.date);
+  
+      // 주차 계산
+      const weekNumber = Math.ceil(
+        (txDate.getDate() + new Date(txDate.getFullYear(), txDate.getMonth(), 1).getDay()) / 7
+      );
+  
+      // `weekKey`는 연도와 월, 그리고 주차를 결합한 값
+      const weekKey = `${txDate.getFullYear()}-${txDate.getMonth() + 1}-Week ${weekNumber}`;
+  
+      // 각 주차별 데이터를 초기화하고 합산
+      if (!weeks[weekKey]) {
+        weeks[weekKey] = { week: weekKey, income: 0, expense: 0 };
+      }
+  
+      // 트랜잭션이 입금이면 `income`에, 출금이면 `expense`에 추가
+      if (tx.type === "입금") {
+        weeks[weekKey].income += tx.amount;
+      } else if (tx.type === "출금") {
+        weeks[weekKey].expense += tx.amount;
+      }
+    });
+  
+    // 객체를 배열로 변환해 반환
+    return Object.values(weeks);
+  })();
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -105,7 +140,12 @@ const App = () => {
             </main>
           }
         />
-        <Route path="/statistics" element={<Statistics transactions={transactions} />} />
+        <Route path="/statistics" 
+          element={
+            <Statistics
+              transactions={transactions}
+              weeklyChartData={weeklyChartData}
+            />} />
       </Routes>
       {/* 현재 경로가 /statistics가 아닌 경우에만 MokokoStatisticsButton 표시 */}
       {location.pathname !== "/statistics" && <MokokoStatisticsButton />}

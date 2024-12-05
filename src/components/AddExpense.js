@@ -6,8 +6,7 @@ const AddExpense = ({ addExpense, selectedDate, currentBalance }) => {
   const [customAmount, setCustomAmount] = useState(0); // 직접 입력 금액
   const [amount, setAmount] = useState(0); // 카테고리 금액 입력
 
-  // 카테고리 데이터
-  const categories = ["재련 재료 구매", "장비 재련", "보석 구매", "악세서리 구매", "초월", "엘릭서", "카르마", "아바타 구매",];
+  const categories = ["재련 재료 구매", "장비 재련", "보석 구매", "악세서리 구매", "초월", "엘릭서", "카르마", "아바타 구매"];
 
   const handleAdd = () => {
     const expenseAmount = category
@@ -22,20 +21,19 @@ const AddExpense = ({ addExpense, selectedDate, currentBalance }) => {
       alert("출금 금액이 현재 보유 수량보다 많습니다.");
       return;
     }
-
     if (!category && (customTitle.trim() === "" || customAmount <= 0)) {
       alert("직접 입력 항목과 금액을 올바르게 입력해주세요.");
       return;
     }
 
-    // 지출 데이터 생성
     const expense = {
       id: Date.now(),
       category: category || "직접 입력",
       subcategory: category || customTitle,
-      amount: category ? parseInt(amount, 10) : parseInt(customAmount, 10),
+      amount: expenseAmount,
       date: selectedDate,
       type: "출금",
+      dateTime: new Date().toISOString(), // 정확한 시간 정보 포함
     };
 
     addExpense(expense);
@@ -47,84 +45,71 @@ const AddExpense = ({ addExpense, selectedDate, currentBalance }) => {
     setAmount(0);
   };
 
-  // onFocus 및 onBlur 핸들러: 입력 필드 초기값 처리
-  const handleFocus = (setter) => (e) => {
-    if (e.target.value === "0") setter("");
-  };
-
-  const handleBlur = (setter) => (e) => {
-    if (e.target.value === "") setter(0);
-  };
-
   return (
     <div className="p-4 border rounded-md max-w-md mx-auto space-y-4">
-        {/* 카테고리 선택 */}
-        <div>
-          <label className="block font-bold mb-2">카테고리:</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border p-2 rounded w-full"
-          >
-            <option value="">카테고리 선택</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* 카테고리 선택 */}
+      <div>
+        <label className="block font-bold mb-2">카테고리:</label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border p-2 rounded w-full"
+        >
+          <option value="">카테고리 선택</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {/* 금액 입력 (카테고리 항목) */}
-        {category && (
-          <div>
-            <label className="block font-bold mb-2">금액:</label>
+      {/* 금액 입력 (카테고리 항목) */}
+      {category && (
+        <div>
+          <label className="block font-bold mb-2">금액:</label>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(parseInt(e.target.value, 10) || 0)}
+            placeholder="금액 입력"
+            className="border p-2 rounded w-full text-gray-600"
+          />
+        </div>
+      )}
+
+      {/* 직접 입력 */}
+      {!category && (
+        <div>
+          <label className="block font-bold mb-2">직접 입력:</label>
+          <div className="flex space-x-2">
+            <input
+              type="text"
+              value={customTitle}
+              onChange={(e) => setCustomTitle(e.target.value)}
+              placeholder="(예: 상중 목걸이 구매)"
+              className="border p-2 rounded w-1/2"
+            />
             <input
               type="number"
-              value={amount}
-              onChange={(e) => setAmount(parseInt(e.target.value, 10) || 0)}
-              onFocus={handleFocus(setAmount)}
-              onBlur={handleBlur(setAmount)}
+              value={customAmount}
+              onChange={(e) =>
+                setCustomAmount(parseInt(e.target.value, 10) || 0)
+              }
               placeholder="금액 입력"
-              className="border p-2 rounded w-full text-gray-600"
+              className="border p-2 rounded w-1/2 text-gray-600"
             />
           </div>
-        )}
+        </div>
+      )}
 
-        {/* 직접 입력 */}
-        {!category && (
-          <div>
-            <label className="block font-bold mb-2">직접 입력:</label>
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={customTitle}
-                onChange={(e) => setCustomTitle(e.target.value)}
-                placeholder="(예: 상중 목걸이 구매)"
-                className="border p-2 rounded w-1/2"
-              />
-              <input
-                type="number"
-                value={customAmount}
-                onChange={(e) =>
-                  setCustomAmount(parseInt(e.target.value, 10) || 0)
-                }
-                onFocus={handleFocus(setCustomAmount)}
-                onBlur={handleBlur(setCustomAmount)}
-                placeholder="금액 입력"
-                className="border p-2 rounded w-1/2 text-gray-600"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* 추가 버튼 */}
-        <button
-          onClick={handleAdd}
-          className="w-full bg-green-500 text-white p-2 rounded"
-        >
-          추가
-        </button>
+      {/* 추가 버튼 */}
+      <button
+        onClick={handleAdd}
+        className="w-full bg-green-500 text-white p-2 rounded"
+      >
+        추가
+      </button>
     </div>
   );
 };
