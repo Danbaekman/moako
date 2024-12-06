@@ -1,0 +1,57 @@
+.react-calendar {
+    width: 100%;
+    max-width: 1200px; /* 달력의 최대 크기 */
+    margin: 0 auto; /* 화면 가운데 정렬 */
+    border: none;
+    font-family: Arial, Helvetica, sans-serif;
+    position: relative; /* 기존 흐름에 영향을 주지 않도록 설정 */
+    z-index: 1; /* 다른 요소와의 충돌 방지 */
+  }
+  
+  .react-calendar__tile {
+    width: 80px; /* 셀 너비 */
+    height: 80px; /* 셀 높이 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .react-calendar__tile--now {
+    background: #f0f8ff;
+    border-radius: 8px;
+  }
+  
+  .react-calendar__tile--active {
+    background: #8ecae6;
+    color: white;
+    border-radius: 8px;
+  }
+  
+  .note-indicator {
+    background-color: #fce4ec;
+    color: #ad1457;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .custom-calendar-wrapper {
+    position: relative; /* 부모 요소에 상대적 배치 */
+  }
+  
+  .custom-calendar {
+    position: absolute; /* 달력을 독립적으로 배치 */
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0); /* 가운데 정렬 */
+    z-index: 50; /* 다른 요소 위로 배치 */
+    background-color: white; /* 배경색 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    border-radius: 8px;
+  }
+  

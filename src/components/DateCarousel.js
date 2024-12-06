@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MonthYear from "./MonthYear"; // MonthYear 컴포넌트 import
+import MonthYear from "./MonthYear";
 
-// 날짜 계산 함수 (중앙 날짜 기준)
-const getDateRange = (centerDate) => {
-  const dates = [];
-  for (let i = -3; i <= 3; i++) {
-    const date = new Date(centerDate);
-    date.setDate(centerDate.getDate() + i);
-    dates.push({
-      fullDate: date.toISOString().slice(0, 10), // YYYY-MM-DD 형식
-      day: date.getDate(), // 일자
-      dayOfWeek: date.toLocaleDateString("ko-KR", { weekday: "short" }), // 요일
-    });
-  }
-  return dates;
-};
-
-// 요일 아이콘 매핑
 const dayIcons = {
   월: "/assets/images/monday.png",
   화: "/assets/images/tuesday.png",
@@ -27,21 +11,30 @@ const dayIcons = {
   일: "/assets/images/sunday.png",
 };
 
+const getDateRange = (centerDate) => {
+  const dates = [];
+  for (let i = -3; i <= 3; i++) {
+    const date = new Date(centerDate);
+    date.setDate(centerDate.getDate() + i);
+    dates.push({
+      fullDate: date.toISOString().slice(0, 10),
+      day: date.getDate(),
+      dayOfWeek: date.toLocaleDateString("ko-KR", { weekday: "short" }),
+    });
+  }
+  return dates;
+};
+
 const DateCarousel = ({ onDateSelect, transactions }) => {
-  const [centerDate, setCenterDate] = useState(new Date()); // 현재 날짜
+  const [centerDate, setCenterDate] = useState(new Date());
   const [dateRange, setDateRange] = useState(getDateRange(new Date()));
 
-  // centerDate가 변경될 때마다 dateRange 재계산
   useEffect(() => {
     setDateRange(getDateRange(centerDate));
   }, [centerDate]);
 
-  // 특정 날짜의 수입과 지출 계산
   const calculateIncomeExpense = (date) => {
-    // 날짜별로 필터링한 데이터를 최신순으로 정렬
-    const filteredTransactions = transactions
-      .filter((tx) => tx.date === date)
-      .sort((a, b) => new Date(b.dateTime || b.date) - new Date(a.dateTime || a.date)); // 최신순 정렬
+    const filteredTransactions = transactions.filter((tx) => tx.date === date);
 
     const income = filteredTransactions
       .filter((tx) => tx.type === "입금")
@@ -51,37 +44,41 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
       .filter((tx) => tx.type === "출금")
       .reduce((sum, tx) => sum + (tx.amount || 0), 0);
 
-    return { income, expense, transactions: filteredTransactions }; // 최신순 정렬된 데이터를 반환
+    return { income, expense };
   };
 
-  // 월 변경 핸들러
   const handleChangeMonth = (direction) => {
     const newCenterDate = new Date(centerDate);
-    newCenterDate.setMonth(centerDate.getMonth() + direction); // +1: 다음 달, -1: 이전 달
+    newCenterDate.setMonth(centerDate.getMonth() + direction);
     setCenterDate(newCenterDate);
   };
 
-  // 날짜 클릭 핸들러
-  const handleDateClick = (selectedDate) => {
-    setCenterDate(new Date(selectedDate)); // 상태 업데이트
+  const handleSelectDate = (date) => {
+    setCenterDate(date);
     if (onDateSelect) {
-      onDateSelect(selectedDate); // 부모 컴포넌트로 선택된 날짜 전달
+      onDateSelect(date.toISOString().split("T")[0]);
+    }
+  };
+
+  const handleDateClick = (selectedDate) => {
+    setCenterDate(new Date(selectedDate));
+    if (onDateSelect) {
+      onDateSelect(selectedDate);
     }
   };
 
   return (
     <div className="flex flex-col items-center space-y-4 mx-auto">
-      {/* MonthYearNavigator 컴포넌트 사용 */}
       <MonthYear
         currentDate={centerDate}
         onChangeMonth={handleChangeMonth}
+        onSelectDate={handleSelectDate}
       />
 
-      {/* 날짜 카드 */}
       <div className="flex items-center space-x-4 overflow-x-auto">
         {dateRange.map((item, index) => {
-          const { income, expense, transactions: dailyTransactions } = calculateIncomeExpense(item.fullDate);
-          const dayOfWeekIcon = dayIcons[item.dayOfWeek] || null; // 요일 아이콘 매핑
+          const { income, expense } = calculateIncomeExpense(item.fullDate);
+          const dayOfWeekIcon = dayIcons[item.dayOfWeek] || null;
           return (
             <div
               key={index}
@@ -92,39 +89,23 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
               }`}
               onClick={() => handleDateClick(item.fullDate)}
             >
-              {/* 날짜와 요일 */}
               <h3 className="text-lg font-bold">{item.day}일</h3>
               {dayOfWeekIcon ? (
                 <img
                   src={dayOfWeekIcon}
-                  alt={item.dayOfWeek}
+                  alt={`${item.dayOfWeek} 아이콘`}
                   className="w-24 h-24 mt-1"
                 />
               ) : (
                 <p className="text-sm text-gray-600">{item.dayOfWeek}</p>
               )}
-
-              {/* 수입과 지출 */}
               <div className="mt-2">
                 <p className="text-xs text-blue-600">
-                  수입: {income.toLocaleString()} G
+                  총 수입: {income.toLocaleString()} G
                 </p>
                 <p className="text-xs text-red-600">
-                  지출: {expense.toLocaleString()} G
+                  총 지출: {expense.toLocaleString()} G
                 </p>
-              </div>
-
-              {/* 트랜잭션 목록 표시 */}
-              <div className="mt-4 space-y-1 text-sm">
-                {dailyTransactions.map((tx, i) => (
-                  <div key={i}>
-                    {tx.type === "입금" ? (
-                      <p className="text-blue-600">{tx.description}: {tx.amount.toLocaleString()} G</p>
-                    ) : (
-                      <p className="text-red-600">{tx.description}: {tx.amount.toLocaleString()} G</p>
-                    )}
-                  </div>
-                ))}
               </div>
             </div>
           );
