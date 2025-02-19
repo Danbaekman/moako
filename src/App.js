@@ -10,15 +10,26 @@ import MokokoStatisticsButton from "./components/MokokoStatisticsButton";
 import Statistics from "./pages/Statistics";
 
 const App = () => {
-  const [transactions, setTransactions] = useState([]); // 트랜잭션 데이터
-  const [initialBalance, setInitialBalance] = useState(0); // 초기 보유 골드
-  const [currentBalance, setCurrentBalance] = useState(0); // 현재 잔액
+
+  const loadFromStorage = (key, defaultValue) => {
+    const storedData = localStorage.getItem(key);
+    return storedData ? JSON.parse(storedData) : defaultValue;
+  };
+
+  const [transactions, setTransactions] = useState(() => loadFromStorage("transactions", []));
+  const [initialBalance, setInitialBalance] = useState(() => loadFromStorage("initialBalance", 0));
+  const [currentBalance, setCurrentBalance] = useState(0);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
-  ); // 선택된 날짜
+  );
 
   const location = useLocation();
+  useEffect(() => {
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+    localStorage.setItem("initialBalance", JSON.stringify(initialBalance));
+  }, [transactions, initialBalance]);
 
+  
   // 현재 잔액 계산
   useEffect(() => {
     const totalIncome = transactions

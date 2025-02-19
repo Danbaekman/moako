@@ -1,32 +1,28 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 추가
+import { useNavigate } from "react-router-dom";
 import "../index.css";
 
 const Header = () => {
-  const navigate = useNavigate(); // 네비게이션 훅
+  const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate("/"); // 첫 페이지로 이동
+    navigate("/");
   };
 
   return (
-    <header className="bg-white text-white p-3 shadow-md">
-      <div className="flex flex-col items-center">
-        {/* 로고와 제목 */}
-        <div
-          className="flex items-center space-x-2 cursor-pointer"
-          onClick={handleNavigate} // 클릭 이벤트 추가
-        >
-          <img
-            src="/assets/images/moakoLogo.png"
-            alt="Moako Logo"
-            className="h-8 w-8"
-          />
-          <h1 className="text-4xl font-baloo font-bold text-green-500">Moako</h1>
-        </div>
-
-        {/* 부제목 */}
-        <p className="text-sm text-gray-500">로스트아크 가계부</p>
+    <header className="bg-white py-1 shadow-md flex flex-col items-center"> {/* ✅ 헤더 자체를 중앙 정렬 */}
+      <div 
+        className="flex flex-col items-center gap-2" // ✅ 이미지와 글 사이 여백 동일하게 설정
+        onClick={handleNavigate}
+      >
+        {/* 로고 이미지 */}
+        <img
+          src="/assets/images/moakoLogo.png"
+          alt="Moako Logo"
+          className="h-auto max-h-32 w-auto block"
+          style={{ marginBottom: "-50px", marginTop: "-38px", objectFit: "contain" }}
+        />
+          <p className="text-center text-sm text-gray-500 leading-none pb-2">로스트아크 가계부</p>
       </div>
     </header>
   );
