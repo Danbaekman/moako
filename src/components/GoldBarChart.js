@@ -10,25 +10,30 @@ import {
   Legend,
 } from "recharts";
 
-const GoldBarChart = ({ weeklyChartData }) => {
+const GoldBarChart = ({ weeklyChartData, currentDate }) => {
   const RATIO_COLORS = { income: "#22c55e", expense: "#f9a8d4" }; // 수익: green-500, 지출: pink-300
 
-  // 4개의 주차 고정값 생성
-  const fixedWeeks = [
-    "2024-12-Week 1",
-    "2024-12-Week 2",
-    "2024-12-Week 3",
-    "2024-12-Week 4",
-  ];
+  // 현재 달의 4개 주차 고정값 동적으로 생성
+  const getFixedWeeks = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    return [...Array(4)].map((_, i) => `${year}-${month}-Week ${i + 1}`);
+  };
+
+  const fixedWeeks = getFixedWeeks();
 
   const formattedData = fixedWeeks.map((week) => {
     const existingWeekData = weeklyChartData.find((data) => data.week === week);
     return existingWeekData || { week, income: 0, expense: 0 };
   });
 
+  console.log("📊 변환된 주간 데이터:", formattedData);
+
   // 주차 라벨 포맷터
   const formatWeekLabel = (week) => {
-    const [, year, month, weekNumber] = week.match(/(\d+)-(\d+)-Week (\d+)/);
+    const match = week.match(/(\d+)-(\d+)-Week (\d+)/);
+    if (!match) return week;
+    const [, year, month, weekNumber] = match;
     return `${year}년 ${month}월 ${weekNumber}주차`;
   };
 
@@ -37,12 +42,16 @@ const GoldBarChart = ({ weeklyChartData }) => {
   const thisMonthExpense = formattedData.reduce((acc, week) => acc + week.expense, 0);
 
   // 수익 대비 지출 퍼센트 계산
-  const expensePercentage = ((thisMonthExpense / thisMonthIncome) * 100).toFixed(1);
+  const expensePercentage = thisMonthIncome
+    ? ((thisMonthExpense / thisMonthIncome) * 100).toFixed(1)
+    : 0;
 
   // 지난달 데이터 추출 (예: 2024년 11월)
-  const lastMonthData = weeklyChartData.filter((data) =>
-    data.week.includes("2024-11")
-  );
+  const lastMonth = new Date(currentDate);
+  lastMonth.setMonth(currentDate.getMonth() - 1);
+  const lastMonthKey = `${lastMonth.getFullYear()}-${lastMonth.getMonth() + 1}`;
+
+  const lastMonthData = weeklyChartData.filter((data) => data.week.includes(lastMonthKey));
 
   // 지난달 지출 계산
   const lastMonthExpense = lastMonthData.reduce((acc, week) => acc + week.expense, 0);
@@ -54,12 +63,12 @@ const GoldBarChart = ({ weeklyChartData }) => {
   const expenseMessage =
     expenseDifference > 0
       ? `모험가님, 지난달보다 ${expenseDifference.toLocaleString()}G 더 지출했습니다.`
-      : `모험가님, 지난달보다 ${Math.abs(expenseDifference).toLocaleString()}G 덜 지출했습니다.`;
+      : `모험가님, 지난달보다 **${Math.abs(expenseDifference).toLocaleString()}G** 덜 지출했습니다.`;
 
   return (
     <div className="bg-white p-6 rounded-md shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">골드 소비 추이</h1>
+        <h1 className="text-xl font-bold mb-2">골드 소비 추이</h1>
         <div className="flex items-center gap-4">
           <div className="flex items-center">
             <div
@@ -106,7 +115,7 @@ const GoldBarChart = ({ weeklyChartData }) => {
       </ResponsiveContainer>
       <div className="mt-4 text-center">
         <p className="text-gray-700 text-sm">
-          이번 달 지출은 총 {thisMonthExpense.toLocaleString()}G이며, 수익 대비 {expensePercentage}%입니다.
+          이번 달 지출은 총 <span className="font-bold">{thisMonthExpense.toLocaleString()}G</span>이며, 수익 대비 <span className="font-bold">{expensePercentage}%</span>입니다.
         </p>
         <p className="text-gray-700 text-sm">{expenseMessage}</p>
       </div>
@@ -115,5 +124,3 @@ const GoldBarChart = ({ weeklyChartData }) => {
 };
 
 export default GoldBarChart;
-
-           

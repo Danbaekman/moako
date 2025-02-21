@@ -17,7 +17,7 @@ const SpendingPatternPieChart = ({ transactions, CATEGORY_COLORS_MAP }) => {
 
   return (
     <div className="bg-white p-6 rounded-md shadow-md mb-6">
-      <h1 className="text-xl font-bold text-center mb-2">나의 소비 생활 패턴</h1>
+      <h1 className="text-xl font-bold mb-2">나의 소비 생활 패턴</h1>
       <div className="flex justify-between items-center">
         <div className="relative flex-1 flex justify-center items-center">
           <ResponsiveContainer width="80%" height={300}>

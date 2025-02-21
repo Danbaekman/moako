@@ -28,6 +28,10 @@ const StatisticsPage = ({ transactions, weeklyChartData }) => {
     setCurrentDate(newDate);
   };
 
+  const handleSelectDate = (date) => {
+    setCurrentDate(date); // 선택한 날짜를 현재 날짜로 설정
+  };
+
   // 트랜잭션 데이터 필터링
   useEffect(() => {
     const currentMonth = currentDate.getMonth();
@@ -58,7 +62,7 @@ const StatisticsPage = ({ transactions, weeklyChartData }) => {
       {/* 메인 콘텐츠 */}
       <div className="w-4/6 space-y-6">
         {/* 날짜 변경 컴포넌트 */}
-        <MonthYear currentDate={currentDate} onChangeMonth={handleChangeMonth} />
+        <MonthYear currentDate={currentDate} onChangeMonth={handleChangeMonth} onSelectDate={handleSelectDate} />
 
         {/* 소비 생활 패턴 파이 차트 */}
         <SpendingPatternPieChart
@@ -67,7 +71,7 @@ const StatisticsPage = ({ transactions, weeklyChartData }) => {
         />
 
         {/* 골드 소비 추이 막대 그래프 */}
-        <GoldBarChart weeklyChartData={filteredWeeklyChartData} />
+        <GoldBarChart weeklyChartData={filteredWeeklyChartData} currentDate={currentDate} />
       </div>
 
       {/* 우측 여백 */}

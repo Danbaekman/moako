@@ -67,6 +67,14 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
     }
   };
 
+  const formatToMan = (amount) => {
+    if (amount === 0) return "0"; // ✅ 금액이 0일 경우 "0"만 표시
+    const man = amount / 10000;
+    return man >= 1 ? `${Math.floor(man)}만` : `${man.toFixed(2)}만`;
+  };
+  
+  
+
   return (
     <div className="flex flex-col items-center space-y-4 mx-auto">
       <MonthYear
@@ -82,7 +90,7 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
           return (
             <div
               key={index}
-              className={`flex flex-col items-center p-4 w-[120px] rounded-md shadow-md text-center cursor-pointer transition-all ${
+              className={`flex flex-col items-center p-4 w-[127px] h-[200px] rounded-md shadow-md text-center cursor-pointer transition-all ${
                 item.fullDate === centerDate.toISOString().slice(0, 10)
                   ? "bg-lime-200"
                   : "bg-white"
@@ -99,12 +107,12 @@ const DateCarousel = ({ onDateSelect, transactions }) => {
               ) : (
                 <p className="text-sm text-gray-600">{item.dayOfWeek}</p>
               )}
-              <div className="mt-2">
-                <p className="text-xs text-blue-600">
-                  총 수입: {income.toLocaleString()} G
+              <div className="mt-2 w-full">
+                <p className="text-blue-600 text-xs">
+                  총 수입: {formatToMan(income)} G
                 </p>
-                <p className="text-xs text-red-600">
-                  총 지출: {expense.toLocaleString()} G
+                <p className="text-red-600 text-xs">
+                  총 지출: {formatToMan(expense)} G
                 </p>
               </div>
             </div>
