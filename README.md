@@ -24,10 +24,7 @@
 - 📅 **달력 기능**: 날짜별 메모 추가 가능  
 
 <div align="center">
-  <img 
-    src="https://github.com/사용자이름/저장소이름/assets/입출금-기능-스크린샷.jpg" 
-    alt="골드 입출금 관리 UI"
-    width="80%"
+  <img width="1502" alt="모아코 메인" src="https://github.com/user-attachments/assets/0f4151c2-9cbe-4e08-a15f-309f2bad176f" />
   />
 </div>
 
