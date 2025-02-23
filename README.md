@@ -18,26 +18,33 @@
 ---
 
 ## 🎯 모아코 주요 기능  
-### ✅ **골드 입출금 관리**
-- 💰 **골드 입출금 기록**: 수입과 지출을 손쉽게 등록하여 관리  
-- 🔍 **입출금 내역 조회**: 날짜별로 수입과 지출 내역 확인  
-- 📅 **달력 기능**: 날짜별 메모 추가 가능  
-
+### 1. **모아코 메인**
+- 💰 **골드 입출금 기록**: 골드의 입출금 내역을 기록하세요. 원하는 메뉴탭이 없다면 직접 입력으로 가능합니다.
 <div align="center">
   <img width="1502" alt="모아코 메인" src="https://github.com/user-attachments/assets/0f4151c2-9cbe-4e08-a15f-309f2bad176f" />
+</div>
+
+### **달력 메모 기능**
+- 📅 **메모 추가**: 원하는 날짜의 달력을 열어 메모를 작성해 보세요. 아이템을 얻어 기분이 좋았던 날들도 체크해보시길 바랍니다 ㅎㅎ  
+<div align="center">
+  <img width="1502" alt="모아코 메인" src="https://github.com/user-attachments/assets/fc9ffb43-3f09-48da-919f-3c546886b673" />
   />
 </div>
 
-### ✅ **소비 패턴 분석**
+### **입출금 내역 조회**
+- 🔍 날짜별로 수입과 지출 내역 확인이 가능합니다. 한눈에 알아보기 쉽게 UI를 구성하였습니다.
+<div align="center">
+  <img width="1502" alt="모아코 메인" src="https://github.com/user-attachments/assets/f20e88c0-31c7-4784-bb5e-c35d7507231e" />
+  />
+</div>
+
+
+### 2. **모아코 차트**
 - 📊 **통계 차트 제공**: 주간, 월간 골드 소비 추이 시각화  
 - 🔄 **수익 대비 지출 비율 확인**: 효율적인 소비 계획 수립 가능  
 
 <div align="center">
-  <img 
-    src="https://github.com/user-attachments/assets/46b99ee7-534a-4e7b-a4d9-1aeb708ca328" 
-    alt="소비 패턴 분석 UI"
-    width="80%"
-  />
+  <img width="1085" alt="모아코 통계" src="https://github.com/user-attachments/assets/c3eb2111-63a2-4b4e-8271-21ed49786483" />
 </div>
 
 ---
